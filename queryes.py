@@ -1,6 +1,9 @@
 import django
 import os
 import datetime
+
+from django.db.models import Count
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
 
@@ -145,20 +148,96 @@ if __name__ == "__main__":
 # entry = Blog.objects.annotate(number_of_entries=Count('entries')).values('name', 'number_of_entries')
 # print(entry)
 
-from django.db.models import Count
-blogs = Blog.objects.alias(number_of_entries=Count('entries')).filter(number_of_entries__gt=4)
-print(blogs)
+# from django.db.models import Count
+# blogs = Blog.objects.alias(number_of_entries=Count('entries')).filter(number_of_entries__gt=4)
+# print(blogs)
+#
+
+
+# count_authors = Entry.objects.aggregate(
+#         count_authors=Count('author', distinct=True)
+#     )
+# print(count_authors)  # {'count_authors': 12}
+#
+#
+# entries_with_tags_count = Entry.objects.annotate(
+#     tag_count=Count('tags')).values('id', 'tag_count')
+# print(entries_with_tags_count)
+#
+#
+# entries_with_tags_count = Entry.objects.annotate(
+#     tag_count=Count('body_text')).values('author_id', 'tag_count')
+# print(entries_with_tags_count)
+#
+
+#
+# from django.db.models import Sum
+#
+# # Вычислить общее число комментариев в БД
+# calc_rating = Entry.objects.aggregate(
+#     sum_comments=Sum('number_of_comments')
+# )
+# print(calc_rating)  # {'sum_comments': 134}
+
+
+# filtered_data = Blog.objects.filter(id__gte=2).order_by("id")
+# print(filtered_data)  # упорядочивание по возрастанию по полю id
+#
+#
+# print(filtered_data.reverse())
+#
+# filtered_data = Blog.objects.filter(id__gte=2).order_by("id")
+# print(filtered_data)
+# print(filtered_data.reverse())
+#
+
+# print(Entry.objects.order_by('author', 'pub_date').distinct('author', 'pub_date'))
+#
+#
+
+# Обычный запрос
+# print(Blog.objects.filter(name__startswith='Фитнес'))
+# # <QuerySet [<Blog: Фитнес и здоровый образ жизни>]>
+#
+# print(Blog.objects.filter(name__startswith='Фитнес').values())
+
+# jb = Author.objects.values_list('id', 'name', 'email')
+# for i in jb:
+#     print(i)
+# print(Blog.objects.values_list())
+
+# blog_a_entries = Entry.objects.filter(blog__name='Путешествия по миру')
+# blog_b_entries = Entry.objects.filter(blog__name='Кулинарные искушения')
+# blog_c_entries = Entry.objects.filter(blog__name='Фитнес и здоровый образ жизни')
+# result_qs = blog_a_entries.union(blog_b_entries, blog_c_entries)
+# print(result_qs)
+
+
+# print(Entry.objects.filter(blog__name__in=['Путешествия по миру', 'Кулинарные искушения', 'Фитнес и здоровый образ жизни']))
 
 
 
-
-
-
-
-
-
-
-
+# from django.db import connection
+#
+# print("Число запросов = ", len(connection.queries), " Запросы = ", connection.queries)
+# """
+# Число запросов =  0  Запросы =  []
+# """
+# entry = Entry.objects.get(id=5)
+# print("Число запросов = ", len(connection.queries), " Запросы = ", connection.queries)
+# """
+# Число запросов =  1  Запросы =  [...]
+# """
+# blog = entry.blog
+# print("Число запросов = ", len(connection.queries), " Запросы = ", connection.queries)
+# """
+# Число запросов =  2  Запросы =  [...,...]
+# """
+# print('Результат запроса = ', blog)
+# """
+# Результат запроса =  Путешествия по миру
+# """
+# result = ModelA.objects.select_related('modelb', 'modelb__modelc', 'modelb__modelc__modeld').get(id=1)
 
 
 
