@@ -1,4 +1,4 @@
-from django.db.models import Max, Q
+from django.db.models import Max
 from django.shortcuts import render
 from django.views import View
 from .models import Author, AuthorProfile, Entry, Tag
@@ -14,18 +14,16 @@ class TrainView(View):
         self.answer2 = None  # TODO Какой автор имеет наибольшее количество опубликованных статей?
 
 
-        self.answer3 =  Entry.objects.filter(Q(tags__name='Кино') |Q (tags__name='Музыка'))
-        #  Какие статьи содержат тег 'Кино' или 'Музыка' ?
+        self.answer3 = None  # TODO Какие статьи содержат тег 'Кино' или 'Музыка' ?
 
 
-        self.answer4 = Author.objects.filter(gender__contains='ж').count()  # Сколько авторов женского пола зарегистрировано в системе?
+        self.answer4 = Author.objects.filter(gender__contains='ж').count()  # TODO Сколько авторов женского пола зарегистрировано в системе?
 
 
         self.answer5 = None  # TODO Какой процент авторов согласился с правилами при регистрации?
 
 
-        self.answer6 = AuthorProfile.objects.filter(stage__gte=1).filter(stage__lte=5)
-        # Какие авторы имеют стаж от 1 до 5 лет?
+        self.answer6 = None  # TODO Какие авторы имеют стаж от 1 до 5 лет?
 
         max_age = Author.objects.aggregate(max_age=Max('age'))
         self.answer7 = Author.objects.filter(age=max_age['max_age'])#.values_list('last_name', 'first_name', flat=True)  # TODO Какой автор имеет наибольший возраст?
@@ -45,11 +43,3 @@ class TrainView(View):
 
 
 
-# from django.db.models import Count
-#
-# # Группировка категорий и подсчёт количества книг в них
-# category_book_counts = Category.objects.annotate(book_count=Count('books'))
-#
-# # Вывод результатов
-# for category in category_book_counts:
-#     print(f"{category.name}: {category.book_count} книг(и)")
